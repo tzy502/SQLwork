@@ -1,0 +1,30 @@
+package cn.edu.zucc.personplan.itf;
+
+import java.util.List;
+
+import cn.edu.zucc.personplan.model.BeanPlan;
+import cn.edu.zucc.personplan.model.BeanStep;
+import cn.edu.zucc.personplan.util.BaseException;
+
+public interface IStepManager {
+	/**
+	 * 添加步骤
+	 * 
+	 * @param plan
+	 * @param name
+	 * @param planstartdate
+	 * @param planfinishdate
+	 * @throws BaseException
+	 */
+	public void add(BeanPlan plan, String name, String planstartdate, String planfinishdate)throws BaseException;
+
+	public List<BeanStep> loadSteps(BeanPlan plan)throws BaseException;
+
+	public void deleteStep(BeanStep step)throws BaseException;
+
+	public void startStep(BeanStep step)throws BaseException;
+
+	public void finishStep(BeanStep step)throws BaseException;
+
+	public void modifyStep(BeanStep step)throws BaseException;
+}
