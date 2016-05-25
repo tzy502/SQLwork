@@ -67,15 +67,15 @@ public class ExampleUserManager implements IUserManager {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="SELECT userid,password,username FROM planuser where userid=?";
+			String sql="SELECT password,username FROM planuser where userid=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,userid);
 			java.sql.ResultSet rs=pst.executeQuery();
 			if(!rs.next()) throw new BusinessException("登陆账号不 存在");
 			BeanUser u=new BeanUser();
-			u.setUserId(rs.getInt(1));
-			u.setPassword(rs.getString(2));
-			u.setUserName(rs.getString(3));
+			u.setUserId(userid);
+			u.setPassword(rs.getString(1));
+			u.setUserName(rs.getString(2));
 			rs.close();
 			pst.close();
 			return u;
@@ -102,26 +102,28 @@ public class ExampleUserManager implements IUserManager {
 		Connection conn=null;
 
 		try {
+			conn=DBUtil.getConnection();
 			String sql="SELECT userid,password,username FROM planuser where userid=? and password=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-			pst.setInt(1,user.getUserId());
-			pst.setString(2,user.getPassword());
+			pst.setString(1,user.getUserId());
+			pst.setString(2,oldPwd);
 			java.sql.ResultSet rs=pst.executeQuery();
-			if(!rs.next()) throw new BusinessException("登陆账号不 存在");
-			BeanUser u=new BeanUser();
-			u.setUserId(rs.getInt(1));
-			u.setPassword(rs.getString(2));
-			u.setUserName(rs.getString(3));
-			rs.close();
-			pst.close();
+			
+			
+			
+			if(!rs.next()) 
+				throw new BusinessException("登陆账号不 存在");
+
 			if(newPwd.equals(newPwd2)){
+				System.out.println("123");
 				sql="update [planuser] set password=? where userid=?";
-				pst=conn.prepareStatement(sql);
+				pst=conn.prepareStatement(sql);	
 				pst.setString(1, newPwd);
-				pst.setInt(2, u.getUserId());
+				pst.setString(2, user.getUserId());
 				pst.execute();
 				pst.close();
 			}
+
 			else
 				throw new BusinessException("前后两次密码不一样");	
 			
@@ -131,8 +133,5 @@ public class ExampleUserManager implements IUserManager {
 			throw new DbException(e);
 		}
 
-	}
-	public static void main(String arg[]){
-		// uesrid=
 	}
 }

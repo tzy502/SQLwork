@@ -2,13 +2,13 @@ package cn.edu.zucc.personplan.model;
 
 public class BeanUser {
 	public static BeanUser currentLoginUser=null;
-	private int UserId;
+	private String UserId;
 	private String Password;
 	private String UserName;
-	public int getUserId() {
+	public String getUserId() {
 		return UserId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		UserId = userId;
 	}
 	public String getPassword() {

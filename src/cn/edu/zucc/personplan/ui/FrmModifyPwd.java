@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import cn.edu.zucc.personplan.PersonPlanUtil;
 import cn.edu.zucc.personplan.model.BeanUser;
 import cn.edu.zucc.personplan.util.BaseException;
+import cn.edu.zucc.personplan.control.example.ExampleUserManager;
 
 public class FrmModifyPwd extends JDialog implements ActionListener {
 	private JPanel toolBar = new JPanel();
@@ -58,8 +59,12 @@ public class FrmModifyPwd extends JDialog implements ActionListener {
 		}
 		else if(e.getSource()==this.btnOk){
 			try {
+				String oldPwd =	new String(edtPwdOld.getPassword());
+				String newPwd =new String(edtPwd.getPassword());
+				String newPwd2 = new String(edtPwd2.getPassword());
 				
-				PersonPlanUtil.userManager.changePwd(BeanUser.currentLoginUser,new String(edtPwdOld.getPassword()),new String(edtPwd.getPassword()),new String(edtPwd2.getPassword()));
+				
+				PersonPlanUtil.userManager.changePwd(BeanUser.currentLoginUser,oldPwd,newPwd,newPwd2);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
