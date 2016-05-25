@@ -7,7 +7,7 @@ public class BeanPlan {
 	 */
 	private int PlanId;
 	private String PlanName;
-	private int StepNmu;
+	private int StepNum;
 	private int CompleteNum;
 	
 	public String getCell(int col){
@@ -34,12 +34,12 @@ public class BeanPlan {
 		PlanName = planName;
 	}
 
-	public int getStepNmu() {
-		return StepNmu;
+	public int getStepNum() {
+		return StepNum;
 	}
 
-	public void setStepNmu(int stepNmu) {
-		StepNmu = stepNmu;
+	public void setStepNum(int stepNum) {
+		StepNum = stepNum;
 	}
 
 	public int getCompleteNum() {

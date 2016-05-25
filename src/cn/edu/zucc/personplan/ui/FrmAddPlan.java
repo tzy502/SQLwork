@@ -25,9 +25,11 @@ public class FrmAddPlan extends JDialog implements ActionListener {
 	private JPanel workPane = new JPanel();
 	private JButton btnOk = new JButton("确定");
 	private JButton btnCancel = new JButton("取消");
-	private JLabel labelName = new JLabel("名称：");
-	
+	private JLabel labelName = new JLabel("名称：");	
 	private JTextField edtName = new JTextField(20);
+	private JLabel Stepnum = new JLabel("步骤数：");	
+	private JTextField StepedtName = new JTextField(20);
+
 	public FrmAddPlan(JFrame f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -36,6 +38,8 @@ public class FrmAddPlan extends JDialog implements ActionListener {
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
 		workPane.add(labelName);
 		workPane.add(edtName);
+		workPane.add(Stepnum);
+		workPane.add(StepedtName);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
 		this.setSize(320, 180);
 		// 屏幕居中显示
@@ -56,9 +60,13 @@ public class FrmAddPlan extends JDialog implements ActionListener {
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			String name=this.edtName.getText();
+
 			try {
-				PersonPlanUtil.planManager.addPlan(name);
+				String name=this.edtName.getText();
+				String Step=this.StepedtName.getText();
+				int Stepnum=Integer.parseInt(Step);
+				System.out.println(Stepnum);
+				PersonPlanUtil.planManager.addPlan(name,Stepnum);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);

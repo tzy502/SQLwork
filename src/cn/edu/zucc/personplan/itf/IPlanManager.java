@@ -11,7 +11,7 @@ public interface IPlanManager {
 	 * @param name  计划名称
 	 * @throws BaseException
 	 */
-	public BeanPlan addPlan(String name) throws BaseException;
+	public BeanPlan addPlan(String name,int Stepnum) throws BaseException;
 	/**
 	 * 提取所有计划
 	 * @return
