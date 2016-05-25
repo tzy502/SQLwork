@@ -108,9 +108,6 @@ public class ExampleUserManager implements IUserManager {
 			pst.setString(1,user.getUserId());
 			pst.setString(2,oldPwd);
 			java.sql.ResultSet rs=pst.executeQuery();
-			
-			
-			
 			if(!rs.next()) 
 				throw new BusinessException("登陆账号不 存在");
 
