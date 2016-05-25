@@ -10,13 +10,13 @@ public class BeanPlan {
 	private int StepNmu;
 	private int CompleteNum;
 	
-/*	public String getCell(int col){
+	public String getCell(int col){
 		if(col==0) return "1";
 		else if(col==1) return "示例计划";
 		else if(col==2) return "2";
 		else if(col==3) return "1";
 		else return "";
-	}*/
+	}
 
 	public int getPlanId() {
 		return PlanId;
