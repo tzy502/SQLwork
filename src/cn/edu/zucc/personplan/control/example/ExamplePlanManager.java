@@ -85,7 +85,7 @@ public class ExamplePlanManager implements IPlanManager {
 			}
 			rs.close();
 			pst.close();
-			
+			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e);
@@ -107,7 +107,7 @@ public class ExamplePlanManager implements IPlanManager {
 		
 		
 		
-		return result;
+		
 	}
 
 	@Override

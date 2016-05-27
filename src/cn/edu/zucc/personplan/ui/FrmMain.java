@@ -74,8 +74,14 @@ public class FrmMain extends JFrame implements ActionListener {
 		}
 		tblPlanData =  new Object[allPlan.size()][BeanPlan.tableTitles.length];
 		for(int i=0;i<allPlan.size();i++){
-			for(int j=0;j<BeanPlan.tableTitles.length;j++)
-				tblPlanData[i][j]=allPlan.get(i).getCell(j);
+			tblPlanData[i][0]=allPlan.get(i).getPlanId();
+			tblPlanData[i][1]=allPlan.get(i).getPlanName();
+			tblPlanData[i][2]=allPlan.get(i).getStepNum();
+			tblPlanData[i][3]=allPlan.get(i).getCompleteNum();
+			
+			
+//			for(int j=0;j<BeanPlan.tableTitles.length;j++)
+//				tblPlanData[i][j]=allPlan.get(i).getCell(j);
 		}
 		tabPlanModel.setDataVector(tblPlanData,tblPlanTitle);
 		this.dataTablePlan.validate();
