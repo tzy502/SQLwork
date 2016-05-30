@@ -38,6 +38,7 @@ public class FrmMain extends JFrame implements ActionListener {
     
     private JMenuItem  menuItem_AddPlan=new JMenuItem("新建计划");
     private JMenuItem  menuItem_DeletePlan=new JMenuItem("删除计划");
+    private JMenuItem  menuItem_ClearPlan=new JMenuItem("清空计划");
     private JMenuItem  menuItem_AddStep=new JMenuItem("添加步骤");
     private JMenuItem  menuItem_DeleteStep=new JMenuItem("删除步骤");
     private JMenuItem  menuItem_startStep=new JMenuItem("开始步骤");
@@ -115,6 +116,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	    //菜单
 	    this.menu_plan.add(this.menuItem_AddPlan); this.menuItem_AddPlan.addActionListener(this);
 	    this.menu_plan.add(this.menuItem_DeletePlan); this.menuItem_DeletePlan.addActionListener(this);
+	  //  this.menu_plan.add(this.menuItem_ClearPlan); this.menuItem_Clear.addActionListener(this);
 	    this.menu_step.add(this.menuItem_AddStep); this.menuItem_AddStep.addActionListener(this);
 	    this.menu_step.add(this.menuItem_DeleteStep); this.menuItem_DeleteStep.addActionListener(this);
 	    this.menu_step.add(this.menuItem_startStep); this.menuItem_startStep.addActionListener(this);
@@ -161,8 +163,13 @@ public class FrmMain extends JFrame implements ActionListener {
 		if(e.getSource()==this.menuItem_AddPlan){
 			FrmAddPlan dlg=new FrmAddPlan(this,"添加计划",true);
 			dlg.setVisible(true);
+			if(dlg.isture()==true){//刷新表格
+				this.reloadPlanTable();
+			}
+			
 		}
-		else if(e.getSource()==this.menuItem_DeletePlan){
+		else 
+		if(e.getSource()==this.menuItem_DeletePlan){
 			if(this.curPlan==null) {
 				JOptionPane.showMessageDialog(null, "请选择计划", "错误",JOptionPane.ERROR_MESSAGE);
 				return;
