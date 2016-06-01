@@ -1,6 +1,6 @@
 package cn.edu.zucc.personplan.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class BeanStep {
 	public static final String[] tblStepTitle={"编号","名称","计划开始时间","计划完成时间","实际开始时间","实际完成时间"};
@@ -8,11 +8,19 @@ public class BeanStep {
 	 * 请自行根据javabean的设计修改本函数代码，col表示界面表格中的列序号，0开始
 	 */
 	private int StepId;
+	public int getPlanId() {
+		return PlanId;
+	}
+	public void setPlanId(int planId) {
+		PlanId = planId;
+	}
 	private String StepName;
 	private Date PBeginTime;
 	private Date PEndTime;
 	private Date ABeginTime;
 	private Date AEndtime;
+	private boolean IsEnd;
+	private int PlanId;
 	public String getCell(int col){
 		if(col==0) return "1";
 		else if(col==1) return "示例步骤";
@@ -23,12 +31,7 @@ public class BeanStep {
 		
 		else return "";
 	}
-	public int getStepId() {
-		return StepId;
-	}
-	public void setStepId(int stepId) {
-		StepId = stepId;
-	}
+
 	public String getStepName() {
 		return StepName;
 	}
@@ -59,5 +62,16 @@ public class BeanStep {
 	public void setAEndtime(Date aEndtime) {
 		AEndtime = aEndtime;
 	}
-	
+	public boolean isIsEnd() {
+		return IsEnd;
+	}
+	public void setIsEnd(boolean isEnd) {
+		IsEnd = isEnd;
+	}
+	public int getStepId() {
+		return StepId;
+	}
+	public void setStepId(int stepId) {
+		StepId = stepId;
+	}
 }

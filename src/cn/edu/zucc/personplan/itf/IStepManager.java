@@ -1,5 +1,6 @@
 package cn.edu.zucc.personplan.itf;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.edu.zucc.personplan.model.BeanPlan;
@@ -16,7 +17,7 @@ public interface IStepManager {
 	 * @param planfinishdate
 	 * @throws BaseException
 	 */
-	public void add(BeanPlan plan, String name, String planstartdate, String planfinishdate)throws BaseException;
+	public void add(BeanPlan plan, String name, Date planstartdate, Date planfinishdate)throws BaseException;
 
 	public List<BeanStep> loadSteps(BeanPlan plan)throws BaseException;
 

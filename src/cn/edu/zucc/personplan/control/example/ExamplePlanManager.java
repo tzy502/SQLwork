@@ -187,13 +187,11 @@ public class ExamplePlanManager implements IPlanManager {
 	@Override
 	public void modifyPlan(BeanPlan plan,BeanPlan newplan) throws BaseException {
 		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
 		Connection conn=null;
 		try {
-			int totalnum=0;
 			conn=DBUtil.getConnection();
 			if(SearchPlan(plan.getPlanId())!=null){
-				String sql="UPDATE [SQLwork].[dbo].[Plan]   SET       [planname] = 'tzy'      ,[stepnum] = 1      ,[Completenum] = 2 WHERE planid=1";
+				String sql="UPDATE [SQLwork].[dbo].[Plan]   SET       [planname] =?      ,[stepnum] = ?      ,[Completenum] = ? WHERE planid=?";
 				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 				pst.setString(1, newplan.getPlanName());
 				pst.setInt(2, newplan.getStepNum());

@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import cn.edu.zucc.personplan.PersonPlanUtil;
+import cn.edu.zucc.personplan.control.example.ExamplePlanManager;
 import cn.edu.zucc.personplan.model.BeanPlan;
 import cn.edu.zucc.personplan.model.BeanStep;
 import cn.edu.zucc.personplan.util.BaseException;
@@ -66,6 +67,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	private BeanPlan curPlan=null;
 	List<BeanPlan> allPlan=null;
 	List<BeanStep> planSteps=null;
+	int i;
 	private void reloadPlanTable(){//这是测试数据，需要用实际数替换
 		try {
 			allPlan=PersonPlanUtil.planManager.loadAll();
@@ -98,9 +100,14 @@ public class FrmMain extends JFrame implements ActionListener {
 			return;
 		}
 		tblStepData =new Object[planSteps.size()][BeanStep.tblStepTitle.length];
-		for(int i=0;i<planSteps.size();i++){
-			for(int j=0;j<BeanStep.tblStepTitle.length;j++)
-				tblStepData[i][j]=planSteps.get(i).getCell(j);
+		for(int i=0;i<planSteps.size()&&planSteps.get(i).isIsEnd()==false;i++){
+				tblStepData[i][0]=planSteps.get(i).getStepId();
+				
+				tblStepData[i][1]=planSteps.get(i).getStepName();
+				tblStepData[i][2]=planSteps.get(i).getPBeginTime();
+				tblStepData[i][3]=planSteps.get(i).getPEndTime();
+				tblStepData[i][4]=planSteps.get(i).getABeginTime();				
+				tblStepData[i][5]=planSteps.get(i).getAEndtime();			
 		}
 		
 		tabStepModel.setDataVector(tblStepData,tblStepTitle);
@@ -182,12 +189,25 @@ public class FrmMain extends JFrame implements ActionListener {
 			}
 		}
 		else if(e.getSource()==this.menuItem_AddStep){
-			FrmAddStep dlg=new FrmAddStep(this,"添加步骤",true);
-			dlg.plan=curPlan;
-			dlg.setVisible(true);
+			ExamplePlanManager Planstep=new ExamplePlanManager();
+			i=FrmMain.this.dataTableStep.getSelectedRow();
+			FrmAddStep dlg;
+			try {
+				dlg = new FrmAddStep(this,"添加步骤",true,Planstep.SearchPlan(i));
+				dlg.plan=curPlan;
+			
+				if(dlg.isadd==true){//刷新表格
+					this.reloadPlanStepTabel(i);
+				}
+				dlg.setVisible(true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 		}
 		else if(e.getSource()==this.menuItem_DeleteStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();
+			i=FrmMain.this.dataTableStep.getSelectedRow();
 			if(i<0) {
 				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
 				return;
