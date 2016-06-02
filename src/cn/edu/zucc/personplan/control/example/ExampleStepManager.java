@@ -137,6 +137,7 @@ public class ExampleStepManager implements IStepManager {
 					+ "WHERE stepid=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setInt(1, step.getStepId());
+			pst.execute();
 			pst.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -160,11 +161,12 @@ public class ExampleStepManager implements IStepManager {
 			conn=DBUtil.getConnection();
 			String sql="UPDATE [SQLwork].[dbo].[step]"
 					+ "   SET [Abegintime] = ? "
-					+ "WHERE planid=?";
+					+ "WHERE stepid=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			Date date=new Date();
 			pst.setTimestamp(1, new Timestamp(date.getTime()));
-			pst.setInt(2, step.getPlanId());
+			pst.setInt(2, step.getStepId());
+			pst.execute();
 			pst.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -191,11 +193,12 @@ public class ExampleStepManager implements IStepManager {
 			conn=DBUtil.getConnection();
 			String sql="UPDATE [SQLwork].[dbo].[step]"
 					+ "   SET [Aendtime] = ? "
-					+ "WHERE planid=?";
+					+ "WHERE stepid=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			Date date=new Date();
 			pst.setTimestamp(1, new Timestamp(date.getTime()));
-			pst.setInt(2, step.getPlanId());
+			pst.setInt(2, step.getStepId());
+			pst.execute();
 			pst.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -213,41 +216,157 @@ public class ExampleStepManager implements IStepManager {
 		
 	}
 
+	public BeanStep SearchStep(int Id)throws BaseException {
+		BeanStep Step =new BeanStep();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="SELECT [stepid]      ,[stepname]      ,[Pbegintime]      ,[Pendtime]      ,[Abegintime]      ,[Aendtime]      ,[isend]      ,[planid]"
+					+"  FROM [SQLwork].[dbo].[step]"
+					+ "WHERE stepid=?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Id);
+			java.sql.ResultSet rs=pst.executeQuery();
+			while(rs.next())
+			{
+				Step.setPlanId(rs.getInt(1));
+				Step.setStepName(rs.getString(2));
+				Timestamp Pbegintime=rs.getTimestamp(3);
+				java.util.Date PBegin=new java.util.Date(Pbegintime.getTime());
+				Step.setPBeginTime(PBegin);
+				Timestamp Pendtime=rs.getTimestamp(4);
+				java.util.Date PEnd=new java.util.Date(Pendtime.getTime());
+				Step.setPEndTime(PEnd);
+				Timestamp Abegintime=rs.getTimestamp(5);
+				java.util.Date Abegin=new java.util.Date(Abegintime.getTime());
+				Step.setABeginTime(Abegin);
+				Timestamp Aendtime=rs.getTimestamp(6);
+				java.util.Date Aend=new java.util.Date(Aendtime.getTime());
+				Step.setAEndtime(Aend);
+				int isend=rs.getInt(7);
+				if (isend==0){
+					Step.setIsEnd(false);
+				}
+				else{
+					Step.setIsEnd(true);
+				}
+				Step.setPlanId(rs.getInt(8));
+			}
+			rs.close();
+			pst.close();
+			return Step;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+	public List<BeanStep> SearchStep2(int PLANId)throws BaseException {
+		List<BeanStep> result=new ArrayList<BeanStep>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="SELECT [stepid]      ,[stepname]      ,[Pbegintime]      ,[Pendtime]      ,[Abegintime]      ,[Aendtime]      ,[isend]      ,[planid]"
+					+"  FROM [SQLwork].[dbo].[step]"
+					+ "WHERE planid=?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, PLANId);
+			java.sql.ResultSet rs=pst.executeQuery();
+			while(rs.next())
+			{
+				BeanStep Step =new BeanStep();
+				Step.setPlanId(rs.getInt(1));
+				Step.setStepName(rs.getString(2));
+				Timestamp Pbegintime=rs.getTimestamp(3);
+				java.util.Date PBegin=new java.util.Date(Pbegintime.getTime());
+				Step.setPBeginTime(PBegin);
+				Timestamp Pendtime=rs.getTimestamp(4);
+				java.util.Date PEnd=new java.util.Date(Pendtime.getTime());
+				Step.setPEndTime(PEnd);
+				Timestamp Abegintime=rs.getTimestamp(5);
+				java.util.Date Abegin=new java.util.Date(Abegintime.getTime());
+				Step.setABeginTime(Abegin);
+				Timestamp Aendtime=rs.getTimestamp(6);
+				java.util.Date Aend=new java.util.Date(Aendtime.getTime());
+				Step.setAEndtime(Aend);
+				int isend=rs.getInt(7);
+				if (isend==0){
+					Step.setIsEnd(false);
+				}
+				else{
+					Step.setIsEnd(true);
+				}
+				Step.setPlanId(rs.getInt(8));
+				result.add(Step);
+			}
+			rs.close();
+			pst.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
 	@Override
 	public void modifyStep(BeanStep step) throws BaseException {
 		// TODO Auto-generated method stub
-//		Connection conn=null;
-//		try {
-//			conn=DBUtil.getConnection();
-//			if(SearchPlan(step.getPlanId())!=null){
-//				String sql="UPDATE [SQLwork].[dbo].[Plan]   SET       [planname] =?      ,[stepnum] = ?      ,[Completenum] = ? WHERE planid=?";
-//				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-//				pst.setString(1, newplan.getPlanName());
-//				pst.setInt(2, newplan.getStepNum());
-//				pst.setInt(3, newplan.getCompleteNum());
-//				pst.setInt(4, step.getPlanId());
-//				pst.execute();
-//				pst.close();
-//
-//			}
-//
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			throw new DbException(e);
-//		}
-//		finally{
-//			if(conn!=null)
-//				try {
-//					conn.close();
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//		}
-//
-//		
-//		
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			if(SearchStep(step.getPlanId())!=null){
+				String sql="UPDATE [SQLwork].[dbo].[step]   SET [stepname] = ?      ,[Pbegintime] = ?      ,[Pendtime] = ?      ,[Abegintime] =?      ,[Aendtime] =?      ,[isend] = ?      ,[planid] = ? WHERE WHERE [stepid] = ?";
+				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+				pst.setString(1, step.getStepName());
+				pst.setTimestamp(2, new Timestamp(step.getABeginTime().getTime()));
+				pst.setTimestamp(3, new Timestamp(step.getAEndtime().getTime()));
+				pst.setTimestamp(4, new Timestamp(step.getPBeginTime().getTime()));
+				pst.setTimestamp(5, new Timestamp(step.getPEndTime().getTime()));
+				if(step.isIsEnd()==true){
+					pst.setInt(6, 1);
+				}
+				else{
+					pst.setInt(6, 0);
+				}
+				pst.setInt(7, step.getPlanId());
+				pst.execute();
+				pst.close();
+
+			}
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+
+		
+		
 	}
 
 }

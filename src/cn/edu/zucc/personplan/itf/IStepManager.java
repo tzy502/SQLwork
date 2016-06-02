@@ -28,4 +28,9 @@ public interface IStepManager {
 	public void finishStep(BeanStep step)throws BaseException;
 
 	public void modifyStep(BeanStep step)throws BaseException;
+	
+	public BeanStep SearchStep(int Id)throws BaseException;
+	
+	public List<BeanStep> SearchStep2(int planid)throws BaseException;
 }
+

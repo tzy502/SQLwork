@@ -105,8 +105,33 @@ public class ExamplePlanManager implements IPlanManager {
 	@Override
 	public void deletePlan(BeanPlan plan) throws BaseException {
 		// TODO Auto-generated method stub
-
+		ExampleStepManager Step=new ExampleStepManager();
+		if(Step.SearchStep2(plan.getPlanId())==null){
+			Connection conn=null;
+			try {
+				conn=DBUtil.getConnection();
+				String sql="DELETE FROM [SQLwork].[dbo].[Plan] "
+						+ "WHERE planid=?";
+				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+				pst.setInt(1, plan.getPlanId());
+				pst.execute();
+				pst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new DbException(e);
+			}
+			finally{
+				if(conn!=null)
+					try {
+						conn.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
+		}
 		
+			
 	}
 
 	@Override
