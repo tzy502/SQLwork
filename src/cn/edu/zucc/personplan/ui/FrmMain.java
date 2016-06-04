@@ -37,7 +37,9 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenu menu_static=new JMenu("查询统计");
     private JMenu menu_more=new JMenu("更多");
     
+    
     private JMenuItem  menuItem_AddPlan=new JMenuItem("新建计划");
+    private JMenuItem  menuItem_ModfiyPlan=new JMenuItem("修改计划");
     private JMenuItem  menuItem_DeletePlan=new JMenuItem("删除计划");
     private JMenuItem  menuItem_ClearPlan=new JMenuItem("清空计划");
     private JMenuItem  menuItem_AddStep=new JMenuItem("添加步骤");
@@ -46,7 +48,7 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenuItem  menuItem_finishStep=new JMenuItem("结束步骤");
     
     private JMenuItem  menuItem_modifyPwd=new JMenuItem("密码修改");
-    
+    private JMenuItem  menuItem_new=new JMenuItem("刷新");
     private JMenuItem  menuItem_static1=new JMenuItem("统计1");
     
     
@@ -100,7 +102,7 @@ public class FrmMain extends JFrame implements ActionListener {
 			return;
 		}
 		tblStepData =new Object[planSteps.size()][BeanStep.tblStepTitle.length];
-		for(int i=0;i<planSteps.size()&&planSteps.get(i).isIsEnd()==false;i++){
+		for(int i=0;i<planSteps.size();i++){
 				tblStepData[i][0]=planSteps.get(i).getStepId();
 				
 				tblStepData[i][1]=planSteps.get(i).getStepName();
@@ -121,20 +123,36 @@ public class FrmMain extends JFrame implements ActionListener {
 		dlgLogin=new FrmLogin(this,"登陆",true);
 		dlgLogin.setVisible(true);
 	    //菜单
-	    this.menu_plan.add(this.menuItem_AddPlan); this.menuItem_AddPlan.addActionListener(this);
-	    this.menu_plan.add(this.menuItem_DeletePlan); this.menuItem_DeletePlan.addActionListener(this);
-	  //  this.menu_plan.add(this.menuItem_ClearPlan); this.menuItem_Clear.addActionListener(this);
-	    this.menu_step.add(this.menuItem_AddStep); this.menuItem_AddStep.addActionListener(this);
-	    this.menu_step.add(this.menuItem_DeleteStep); this.menuItem_DeleteStep.addActionListener(this);
-	    this.menu_step.add(this.menuItem_startStep); this.menuItem_startStep.addActionListener(this);
-	    this.menu_step.add(this.menuItem_finishStep); this.menuItem_finishStep.addActionListener(this);
-	    this.menu_static.add(this.menuItem_static1); this.menuItem_static1.addActionListener(this);
-	    this.menu_more.add(this.menuItem_modifyPwd); this.menuItem_modifyPwd.addActionListener(this);
+	    this.menu_plan.add(this.menuItem_AddPlan); 
+	    this.menuItem_AddPlan.addActionListener(this);
+	    this.menu_plan.add(this.menuItem_ModfiyPlan); 
+	    this.menuItem_ModfiyPlan.addActionListener(this);
+	    this.menu_plan.add(this.menuItem_DeletePlan); 
+	    this.menuItem_DeletePlan.addActionListener(this);
+	    this.menu_plan.add(this.menuItem_ClearPlan);
+	    this.menuItem_ClearPlan.addActionListener(this);
+	    this.menu_step.add(this.menuItem_AddStep);
+	    this.menuItem_AddStep.addActionListener(this);
+	    this.menu_step.add(this.menuItem_DeleteStep); 
+	    this.menuItem_DeleteStep.addActionListener(this);
+	    this.menu_step.add(this.menuItem_startStep);
+	    this.menuItem_startStep.addActionListener(this);
+	    this.menu_step.add(this.menuItem_finishStep);
+	    this.menuItem_finishStep.addActionListener(this);
+	    this.menu_static.add(this.menuItem_static1);
+	    this.menuItem_static1.addActionListener(this);
+	    this.menu_more.add(this.menuItem_modifyPwd); 
+	    this.menuItem_modifyPwd.addActionListener(this);    
+	    this.menu_more.add(this.menuItem_new); 
+	    this.menuItem_new.addActionListener(this);	    
 	    
 	    menubar.add(menu_plan);
 	    menubar.add(menu_step);
 	    menubar.add(menu_static);
 	    menubar.add(menu_more);
+	   
+	    
+	    
 	    this.setJMenuBar(menubar);
 	    
 	    this.getContentPane().add(new JScrollPane(this.dataTablePlan), BorderLayout.WEST);
@@ -175,8 +193,24 @@ public class FrmMain extends JFrame implements ActionListener {
 			}
 			
 		}
-		else 
-		if(e.getSource()==this.menuItem_DeletePlan){
+		else if(e.getSource()==this.menuItem_ModfiyPlan){
+			FrmModifyPlan dlg=new FrmModifyPlan();
+			i=FrmMain.this.dataTablePlan.getSelectedRow();
+			i=i+1;
+			ExamplePlanManager planmanage=new ExamplePlanManager();
+			try {
+				dlg.FrmModifyPlan("修改", true, planmanage.SearchPlan(i));
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+				//dlg.setVisible(true);
+			System.out.println(dlg.isture());
+				if(dlg.isture()==true){//刷新表格
+					this.reloadPlanTable();
+				}
+		}
+		else if(e.getSource()==this.menuItem_DeletePlan){
 			if(this.curPlan==null) {
 				JOptionPane.showMessageDialog(null, "请选择计划", "错误",JOptionPane.ERROR_MESSAGE);
 				return;
@@ -188,10 +222,12 @@ public class FrmMain extends JFrame implements ActionListener {
 				return;
 			}
 		}
+		
 		else if(e.getSource()==this.menuItem_AddStep){
 			ExamplePlanManager Planstep=new ExamplePlanManager();
-			i=FrmMain.this.dataTableStep.getSelectedRow();
+			i=FrmMain.this.dataTableStep.getSelectedRow()+1;
 			FrmAddStep dlg;
+	
 			try {
 				dlg = new FrmAddStep(this,"添加步骤",true,Planstep.SearchPlan(i));
 				dlg.plan=curPlan;
@@ -251,6 +287,9 @@ public class FrmMain extends JFrame implements ActionListener {
 		else if(e.getSource()==this.menuItem_modifyPwd){
 			FrmModifyPwd dlg=new FrmModifyPwd(this,"密码修改",true);
 			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_new){
+			reloadPlanTable();
 		}
 	}
 }

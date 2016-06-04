@@ -21,7 +21,7 @@ public class ExamplePlanManager implements IPlanManager {
 		try {
 			int totalnum=0;
 			conn=DBUtil.getConnection();
-			String sql="select count(*) from [plan]";
+			String sql="select max( [planid]) from [plan]";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			java.sql.ResultSet rs=pst.executeQuery();
 			while(rs.next())
@@ -130,6 +130,9 @@ public class ExamplePlanManager implements IPlanManager {
 					}
 			}
 		}
+		else
+			throw new BaseException("还有步骤的事件无法删除");
+			
 		
 			
 	}
@@ -210,18 +213,16 @@ public class ExamplePlanManager implements IPlanManager {
 	}
 
 	@Override
-	public void modifyPlan(BeanPlan plan,BeanPlan newplan) throws BaseException {
+	public void modifyPlan(BeanPlan plan,String newname) throws BaseException {
 		// TODO Auto-generated method stub
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
 			if(SearchPlan(plan.getPlanId())!=null){
-				String sql="UPDATE [SQLwork].[dbo].[Plan]   SET       [planname] =?      ,[stepnum] = ?      ,[Completenum] = ? WHERE planid=?";
+				String sql="UPDATE [SQLwork].[dbo].[Plan]   SET       [planname] =?  WHERE planid=?";
 				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-				pst.setString(1, newplan.getPlanName());
-				pst.setInt(2, newplan.getStepNum());
-				pst.setInt(3, newplan.getCompleteNum());
-				pst.setInt(4, plan.getPlanId());
+				pst.setString(1, newname);
+				pst.setInt(2, plan.getPlanId());
 				pst.execute();
 				pst.close();
 
@@ -241,11 +242,32 @@ public class ExamplePlanManager implements IPlanManager {
 					e.printStackTrace();
 				}
 		}
-
-		
-		
-		
 	}
+	public void ClearPlan() throws DbException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="DELETE FROM [SQLwork].[dbo].[Plan]";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.execute();
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+
+	}
+	
+	
 	public static void main(String[] args) throws BaseException {
 		ExamplePlanManager a=new ExamplePlanManager();
 	//	a.addPlan("asd", 5);

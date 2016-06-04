@@ -43,5 +43,5 @@ public interface IPlanManager {
 	 * @param plan
 	 * @throws BaseException
 	 */		
-	public void modifyPlan(BeanPlan plan,BeanPlan newplan)throws BaseException;
+	public void modifyPlan(BeanPlan plan,String newname)throws BaseException;
 }

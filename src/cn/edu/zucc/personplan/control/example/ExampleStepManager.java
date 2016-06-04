@@ -54,6 +54,7 @@ public class ExampleStepManager implements IStepManager {
 
 			pst.execute();
 			pst.close();
+			totalstep(plan);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e);
@@ -192,12 +193,13 @@ public class ExampleStepManager implements IStepManager {
 		try {
 			conn=DBUtil.getConnection();
 			String sql="UPDATE [SQLwork].[dbo].[step]"
-					+ "   SET [Aendtime] = ? "
+					+ "   SET [Aendtime] = ? ,isend=?"
 					+ "WHERE stepid=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			Date date=new Date();
 			pst.setTimestamp(1, new Timestamp(date.getTime()));
-			pst.setInt(2, step.getStepId());
+			pst.setInt(2, 1);
+			pst.setInt(3, step.getStepId());
 			pst.execute();
 			pst.close();
 		} catch (SQLException e) {
@@ -284,27 +286,27 @@ public class ExampleStepManager implements IStepManager {
 			{
 				BeanStep Step =new BeanStep();
 				Step.setPlanId(rs.getInt(1));
-				Step.setStepName(rs.getString(2));
-				Timestamp Pbegintime=rs.getTimestamp(3);
-				java.util.Date PBegin=new java.util.Date(Pbegintime.getTime());
-				Step.setPBeginTime(PBegin);
-				Timestamp Pendtime=rs.getTimestamp(4);
-				java.util.Date PEnd=new java.util.Date(Pendtime.getTime());
-				Step.setPEndTime(PEnd);
-				Timestamp Abegintime=rs.getTimestamp(5);
-				java.util.Date Abegin=new java.util.Date(Abegintime.getTime());
-				Step.setABeginTime(Abegin);
-				Timestamp Aendtime=rs.getTimestamp(6);
-				java.util.Date Aend=new java.util.Date(Aendtime.getTime());
-				Step.setAEndtime(Aend);
-				int isend=rs.getInt(7);
-				if (isend==0){
-					Step.setIsEnd(false);
-				}
-				else{
-					Step.setIsEnd(true);
-				}
-				Step.setPlanId(rs.getInt(8));
+//				Step.setStepName(rs.getString(2));
+//				Timestamp Pbegintime=rs.getTimestamp(3);
+//				java.util.Date PBegin=new java.util.Date(Pbegintime.getTime());
+//				Step.setPBeginTime(PBegin);
+//				Timestamp Pendtime=rs.getTimestamp(4);
+//				java.util.Date PEnd=new java.util.Date(Pendtime.getTime());
+//				Step.setPEndTime(PEnd);
+//				Timestamp Abegintime=rs.getTimestamp(5);
+//				java.util.Date Abegin=new java.util.Date(Abegintime.getTime());
+//				Step.setABeginTime(Abegin);
+//				Timestamp Aendtime=rs.getTimestamp(6);
+//				java.util.Date Aend=new java.util.Date(Aendtime.getTime());
+//				Step.setAEndtime(Aend);
+//				int isend=rs.getInt(7);
+//				if (isend==0){
+//					Step.setIsEnd(false);
+//				}
+//				else{
+//					Step.setIsEnd(true);
+//				}
+//				Step.setPlanId(rs.getInt(8));
 				result.add(Step);
 			}
 			rs.close();
@@ -364,9 +366,82 @@ public class ExampleStepManager implements IStepManager {
 					e.printStackTrace();
 				}
 		}
-
-		
-		
 	}
+	public void totalstep(BeanPlan plan) throws DbException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="UPDATE [SQLwork].[dbo].[Plan]"
+					   +" SET stepnum = (select count(*)	from [step]	where planid=?	)"
+					   +" WHERE planid=?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, plan.getPlanId());
+			pst.setInt(2, plan.getPlanId());
+			pst.execute();
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 
+	}
+	public void totalendstep(BeanPlan plan) throws DbException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="UPDATE [SQLwork].[dbo].[Plan]"
+					   +"SET Completenum = (select count(*)	from [step]	where planid=? and isend=1	)"
+					   +" WHERE planid=?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, plan.getPlanId());
+			pst.setInt(2, plan.getPlanId());
+			pst.execute();
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+
+	}
+	public void ClearStep() throws DbException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="DELETE FROM [SQLwork].[dbo].[step]";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.execute();
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+
+	}
 }
