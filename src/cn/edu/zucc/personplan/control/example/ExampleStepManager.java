@@ -13,6 +13,8 @@ import cn.edu.zucc.personplan.model.BeanStep;
 import cn.edu.zucc.personplan.util.BaseException;
 import cn.edu.zucc.personplan.util.DBUtil;
 import cn.edu.zucc.personplan.util.DbException;
+
+
 import java.sql.Timestamp;
 
 public class ExampleStepManager implements IStepManager {
@@ -24,6 +26,11 @@ public class ExampleStepManager implements IStepManager {
 		step.setPBeginTime(planstartdate);
 		step.setPEndTime(planfinishdate);
 		step.setIsEnd(false);
+		if(planstartdate.before(planfinishdate)==false)
+		{
+			throw new BaseException("必须先开始");
+		}
+		
 		Connection conn=null;
 		try {
 			int totalnum=0;
@@ -160,6 +167,7 @@ public class ExampleStepManager implements IStepManager {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
+				
 			String sql="UPDATE [SQLwork].[dbo].[step]"
 					+ "   SET [Abegintime] = ? "
 					+ "WHERE stepid=?";
@@ -190,6 +198,9 @@ public class ExampleStepManager implements IStepManager {
 	public void finishStep(BeanStep step) throws BaseException {
 		// TODO Auto-generated method stub
 		Connection conn=null;
+		if(step.getABeginTime()==null){
+			throw new BaseException("必须先开始");
+		}
 		try {
 			conn=DBUtil.getConnection();
 			String sql="UPDATE [SQLwork].[dbo].[step]"
@@ -202,6 +213,11 @@ public class ExampleStepManager implements IStepManager {
 			pst.setInt(3, step.getStepId());
 			pst.execute();
 			pst.close();
+			ExamplePlanManager mplan =new ExamplePlanManager();
+			totalendstep(mplan.SearchPlan(step.getPlanId()));
+			
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e);
