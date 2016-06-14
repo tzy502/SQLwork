@@ -28,7 +28,7 @@ public class ExampleStepManager implements IStepManager {
 		step.setIsEnd(false);
 		if(planstartdate.before(planfinishdate)==false)
 		{
-			throw new BaseException("必须先开始");
+			throw new BaseException("起始必须在结束前面");
 		}
 		
 		Connection conn=null;
@@ -437,6 +437,32 @@ public class ExampleStepManager implements IStepManager {
 		}
 
 	}
+	public void deleteStep2(int planid) throws BaseException {
+		// TODO Auto-generated method stub
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="DELETE FROM [SQLwork].[dbo].[step] "
+					+ "WHERE planid=?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, planid);
+			pst.execute();
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+
 	public void ClearStep() throws DbException{
 		Connection conn=null;
 		try {

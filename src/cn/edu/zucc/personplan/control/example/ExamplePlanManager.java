@@ -106,7 +106,7 @@ public class ExamplePlanManager implements IPlanManager {
 	public void deletePlan(BeanPlan plan) throws BaseException {
 		// TODO Auto-generated method stub
 		ExampleStepManager Step=new ExampleStepManager();
-		if(Step.SearchStep2(plan.getPlanId())==null){
+//		if(Step.SearchStep2(plan.getPlanId())==null){
 			Connection conn=null;
 			try {
 				conn=DBUtil.getConnection();
@@ -114,6 +114,10 @@ public class ExamplePlanManager implements IPlanManager {
 						+ "WHERE planid=?";
 				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 				pst.setInt(1, plan.getPlanId());
+				ExampleStepManager step=new ExampleStepManager();
+				step.deleteStep2(plan.getPlanId());
+				
+				
 				pst.execute();
 				pst.close();
 			} catch (SQLException e) {
@@ -129,9 +133,9 @@ public class ExamplePlanManager implements IPlanManager {
 						e.printStackTrace();
 					}
 			}
-		}
-		else
-			throw new BaseException("还有步骤的事件无法删除");
+//		}
+//		else
+//			throw new BaseException("还有步骤的事件无法删除");
 			
 		
 			

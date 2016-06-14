@@ -24,9 +24,12 @@ import javax.swing.table.DefaultTableModel;
 
 import cn.edu.zucc.personplan.PersonPlanUtil;
 import cn.edu.zucc.personplan.control.example.ExamplePlanManager;
+import cn.edu.zucc.personplan.control.example.ExampleStepManager;
 import cn.edu.zucc.personplan.model.BeanPlan;
 import cn.edu.zucc.personplan.model.BeanStep;
 import cn.edu.zucc.personplan.util.BaseException;
+import cn.edu.zucc.personplan.util.DbException;
+
 
 
 
@@ -291,5 +294,26 @@ public class FrmMain extends JFrame implements ActionListener {
 		else if(e.getSource()==this.menuItem_new){
 			reloadPlanTable();
 		}
+		menuItem_finishStep.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				ExamplePlanManager a=new ExamplePlanManager();
+				try {
+					a.ClearPlan();
+				} catch (DbException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				ExampleStepManager b=new ExampleStepManager();
+				try {
+					b.ClearStep();
+				} catch (DbException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}	
+		});
 	}
 }
