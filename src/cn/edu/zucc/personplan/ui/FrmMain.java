@@ -294,7 +294,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		else if(e.getSource()==this.menuItem_new){
 			reloadPlanTable();
 		}
-		menuItem_finishStep.addActionListener(new ActionListener()
+		menuItem_ClearPlan.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
